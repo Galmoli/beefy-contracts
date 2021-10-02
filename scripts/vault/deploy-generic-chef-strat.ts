@@ -8,39 +8,39 @@ import { verifyContracts } from "../../utils/verifyContracts";
 const registerSubsidy = require("../../utils/registerSubsidy");
 
 const {
-  CRV: { address: CRV },
-  WFTM: { address: WFTM },
-  SPIRIT: { address: SPIRIT },
-} = addressBook.fantom.tokens;
-const { spiritswap, beefyfinance } = addressBook.fantom.platforms;
+  CRV: { address: CRV }, //TODO 1
+  WFTM: { address: WFTM }, //TODO 2
+  SPIRIT: { address: SPIRIT }, //TODO 3
+} = addressBook.fantom.tokens;  //TODO 4
+const { spiritswap, beefyfinance } = addressBook.fantom.platforms; //TODO 5
 
 const shouldVerifyOnEtherscan = true;
 
-const want = web3.utils.toChecksumAddress("0x2F9209Ef6fA6C002bf6fC99124336e24F88B62D0");
+const want = web3.utils.toChecksumAddress("0x374C8ACb146407Ef0AE8F82BaAFcF8f4EC1708CF"); //TODO 6
 
 const vaultParams = {
-  mooName: "Moo Polywise Quick USDC-WISE",
-  mooSymbol: "mooPolywiseQuickUSDC-WISE",
+  mooName: "Moo Spirit CRV-WFTM", //TODO 7
+  mooSymbol: "mooSpiritCRV-WFTM", //TODO 8
   delay: 21600,
 };
 
 const strategyParams = {
   want,
-  poolId: 1,
-  chef: polywise.masterchef,
-  unirouter: quickswap.router,
-  strategist: "0x010dA5FF62B6e45f89FA7B2d8CEd5a8b5754eC1b", // some address
+  poolId: 10, //TODO 9
+  chef: spiritswap.masterchef,
+  unirouter: spiritswap.router,
+  strategist: "0xBa4cB13Ed28C6511d9fa29A0570Fd2f2C9D08cE3", // STRATEGIST ADDRESS
   keeper: beefyfinance.keeper,
   beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
-  outputToNativeRoute: [polyWISE, WMATIC],
-  outputToLp0Route: [polyWISE, USDC],
-  outputToLp1Route: [polyWISE],
-  pendingRewardsFunctionName: "pendingWise", // used for rewardsAvailable(), use correct function name from masterchef
+  outputToNativeRoute: [SPIRIT, WFTM],   //TODO 10
+  outputToLp0Route: [SPIRIT, WFTM, CRV], //TODO 11
+  outputToLp1Route: [SPIRIT, WFTM],      //TODO 12
+  pendingRewardsFunctionName: "pendingSpirit", // used for rewardsAvailable(), use correct function name from masterchef
 };
 
 const contractNames = {
   vault: "BeefyVaultV6",
-  strategy: "StrategyCommonChefLP",
+  strategy: "StrategySpiritChefLP",
 };
 
 async function main() {
@@ -70,7 +70,7 @@ async function main() {
     vaultParams.mooSymbol,
     vaultParams.delay,
   ];
-  const vault = await Vault.deploy(...vaultConstructorArguments);
+  const vault = await Vault.deploy(...vaultConstructorArguments, {gasLimit: 5000000});
   await vault.deployed();
 
   const strategyConstructorArguments = [
@@ -86,7 +86,7 @@ async function main() {
     strategyParams.outputToLp0Route,
     strategyParams.outputToLp1Route,
   ];
-  const strategy = await Strategy.deploy(...strategyConstructorArguments);
+  const strategy = await Strategy.deploy(...strategyConstructorArguments, {gasLimit: 5000000});
   await strategy.deployed();
 
   // add this info to PR
@@ -102,7 +102,6 @@ async function main() {
   if (shouldVerifyOnEtherscan) {
     verifyContracts(vault, vaultConstructorArguments, strategy, strategyConstructorArguments);
   }
-  await setPendingRewardsFunctionName(strategy, strategyParams.pendingRewardsFunctionName);
   await setCorrectCallFee(strategy, hardhat.network.name);
   console.log();
 
