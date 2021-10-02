@@ -8,13 +8,13 @@ import { verifyContracts } from "../../utils/verifyContracts";
 const registerSubsidy = require("../../utils/registerSubsidy");
 
 const {
-  USDC: { address: USDC },
-  WMATIC: { address: WMATIC },
-  polyWISE: { address: polyWISE },
-} = addressBook.polygon.tokens;
-const { polywise, quickswap, beefyfinance } = addressBook.polygon.platforms;
+  CRV: { address: CRV },
+  WFTM: { address: WFTM },
+  SPIRIT: { address: SPIRIT },
+} = addressBook.fantom.tokens;
+const { spiritswap, beefyfinance } = addressBook.fantom.platforms;
 
-const shouldVerifyOnEtherscan = false;
+const shouldVerifyOnEtherscan = true;
 
 const want = web3.utils.toChecksumAddress("0x2F9209Ef6fA6C002bf6fC99124336e24F88B62D0");
 
