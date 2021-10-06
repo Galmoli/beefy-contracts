@@ -7,39 +7,39 @@ import { verifyContracts } from "../../utils/verifyContracts";
 const registerSubsidy = require("../../utils/registerSubsidy");
 
 const {
-  WMATIC_DFYN: { address: WMATIC_DFYN },
-  DFYN: { address: DFYN },
-  CRV: { address: CRV },
+  USDC: { address: USDC },
+  USDT: { address: USDT },
+  QUICK: { address: QUICK },
   WMATIC: { address: WMATIC },
 } = addressBook.polygon.tokens;
-const { dfyn, beefyfinance } = addressBook.polygon.platforms;
+const { quickswap, beefyfinance } = addressBook.polygon.platforms;
 
 const shouldVerifyOnEtherscan = false;
 
-const want = web3.utils.toChecksumAddress("0x4ea3e2cfc39fa51df85ebcfa366d7f0eed448a1c");
-const rewardPool = web3.utils.toChecksumAddress("0x098fdadCcde328e6CD1168125e1e7685eEa54342");
+const want = web3.utils.toChecksumAddress("0x2cF7252e74036d1Da831d11089D326296e64a728");
+const rewardPool = web3.utils.toChecksumAddress("0x251d9837a13f38f3fe629ce2304fa00710176222");
 
 const vaultParams = {
-  mooName: "Moo DFyn CRV-DFYN",
-  mooSymbol: "mooDFynCRV-DFYN",
+  mooName: "Moo Quick USDC-USDT",
+  mooSymbol: "mooQuickUSDC-USDT",
   delay: 21600,
 };
 
 const strategyParams = {
   want: want,
   rewardPool: rewardPool,
-  unirouter: dfyn.router,
-  strategist: "0x010dA5FF62B6e45f89FA7B2d8CEd5a8b5754eC1b", // some address
+  unirouter: quickswap.router,
+  strategist: "0xBa4cB13Ed28C6511d9fa29A0570Fd2f2C9D08cE3", // some address
   keeper: beefyfinance.keeper,
   beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
-  outputToNativeRoute: [DFYN, WMATIC_DFYN],
-  outputToLp0Route: [DFYN, CRV],
-  outputToLp1Route: [DFYN],
+  outputToNativeRoute: [QUICK, WMATIC],
+  outputToLp0Route: [QUICK, USDC],
+  outputToLp1Route: [QUICK, WMATIC, USDT],
 };
 
 const contractNames = {
   vault: "BeefyVaultV6",
-  strategy: "StrategyDFYNRewardPoolLP",
+  strategy: "StrategyPolygonQuickLP",
 };
 
 async function main() {
@@ -69,7 +69,7 @@ async function main() {
     vaultParams.mooSymbol,
     vaultParams.delay,
   ];
-  const vault = await Vault.deploy(...vaultConstructorArguments);
+  const vault = await Vault.deploy(...vaultConstructorArguments, {gasPrice: 30000000000, gasLimit: 5000000});
   await vault.deployed();
 
   const strategyConstructorArguments = [
@@ -84,7 +84,7 @@ async function main() {
     strategyParams.outputToLp0Route,
     strategyParams.outputToLp1Route,
   ];
-  const strategy = await Strategy.deploy(...strategyConstructorArguments);
+  const strategy = await Strategy.deploy(...strategyConstructorArguments, {gasPrice: 30000000000, gasLimit: 5000000});
   await strategy.deployed();
 
   // add this info to PR

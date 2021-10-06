@@ -17,6 +17,9 @@ const config: DeploymentConfig = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
+      forking:{
+        url: process.env.POLYGON_ARCHIVE_NODE
+      },
       // accounts visible to hardhat network used by `hardhat node --fork` (yarn net <chainName>)
       accounts: hardhatNetworkAccounts,
     },
@@ -74,7 +77,7 @@ const config: DeploymentConfig = {
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: process.env.FTMSCAN_KEY,
+    apiKey: process.env.POLYGONSCAN_KEY,
   },
   solidity: {
     compilers: [
