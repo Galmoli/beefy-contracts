@@ -7,34 +7,34 @@ import { verifyContracts } from "../../utils/verifyContracts";
 const registerSubsidy = require("../../utils/registerSubsidy");
 
 const {
-  USDC: { address: USDC },
-  USDT: { address: USDT },
-  QUICK: { address: QUICK },
-  WMATIC: { address: WMATIC },
+  USDC: { address: USDC }, //TODO 1
+  USDT: { address: USDT }, //TODO 2
+  QUICK: { address: QUICK }, //TODO 3
+  WMATIC: { address: WMATIC }, //TODO 4
 } = addressBook.polygon.tokens;
 const { quickswap, beefyfinance } = addressBook.polygon.platforms;
 
-const shouldVerifyOnEtherscan = false;
+const shouldVerifyOnEtherscan = true; //TRUE IF DEPLOYING TO MAINNET
 
-const want = web3.utils.toChecksumAddress("0x2cF7252e74036d1Da831d11089D326296e64a728");
-const rewardPool = web3.utils.toChecksumAddress("0x251d9837a13f38f3fe629ce2304fa00710176222");
+const want = web3.utils.toChecksumAddress("0x2cF7252e74036d1Da831d11089D326296e64a728"); //TODO 5
+const rewardPool = web3.utils.toChecksumAddress("0x251d9837a13f38f3fe629ce2304fa00710176222"); //TODO 6
 
 const vaultParams = {
-  mooName: "Moo Quick USDC-USDT",
-  mooSymbol: "mooQuickUSDC-USDT",
+  mooName: "Moo Quick USDC-USDT", //TODO 7
+  mooSymbol: "mooQuickUSDC-USDT", //TODO 8
   delay: 21600,
 };
 
 const strategyParams = {
-  want: want,
+  want: want, 
   rewardPool: rewardPool,
   unirouter: quickswap.router,
-  strategist: "0xBa4cB13Ed28C6511d9fa29A0570Fd2f2C9D08cE3", // some address
+  strategist: "0xBa4cB13Ed28C6511d9fa29A0570Fd2f2C9D08cE3", // CHECK IF KEEP OG STRAT ADDRESS
   keeper: beefyfinance.keeper,
   beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
-  outputToNativeRoute: [QUICK, WMATIC],
-  outputToLp0Route: [QUICK, USDC],
-  outputToLp1Route: [QUICK, WMATIC, USDT],
+  outputToNativeRoute: [QUICK, WMATIC], //TODO 9
+  outputToLp0Route: [QUICK, USDC], //TODO 10
+  outputToLp1Route: [QUICK, WMATIC, USDT], //TODO 11
 };
 
 const contractNames = {
