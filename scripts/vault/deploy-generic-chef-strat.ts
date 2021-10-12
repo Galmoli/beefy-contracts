@@ -8,39 +8,41 @@ import { verifyContracts } from "../../utils/verifyContracts";
 const registerSubsidy = require("../../utils/registerSubsidy");
 
 const {
-  CRV: { address: CRV }, //TODO 1
-  WFTM: { address: WFTM }, //TODO 2
-  SPIRIT: { address: SPIRIT }, //TODO 3
-} = addressBook.fantom.tokens;  //TODO 4
-const { spiritswap, beefyfinance } = addressBook.fantom.platforms; //TODO 5
+  USDC: { address: USDC },
+  WMATIC: { address: WMATIC },
+} = addressBook.polygon.tokens;
+const { quickswap, beefyfinance } = addressBook.polygon.platforms;
 
-const shouldVerifyOnEtherscan = true;
+const polySAGE = "0x2ed945Dc703D85c80225d95ABDe41cdeE14e1992";
+const sageChef = "0x0451b4893e4a77E7Eec3B25E816ed7FFeA1EBA68";
 
-const want = web3.utils.toChecksumAddress("0x374C8ACb146407Ef0AE8F82BaAFcF8f4EC1708CF"); //TODO 6
+const shouldVerifyOnEtherscan = false;
+
+const want = web3.utils.toChecksumAddress("0x62F089467e22de4bc1FB5EE605eDe7e782b76B29");
 
 const vaultParams = {
-  mooName: "Moo Spirit CRV-WFTM", //TODO 7
-  mooSymbol: "mooSpiritCRV-WFTM", //TODO 8
+  mooName: "Moo Polysage Quick USDC-SAGE",
+  mooSymbol: "mooPolysageQuickUSDC-SAGE",
   delay: 21600,
 };
 
 const strategyParams = {
   want,
-  poolId: 10, //TODO 9
-  chef: spiritswap.masterchef,
-  unirouter: spiritswap.router,
-  strategist: "0xBa4cB13Ed28C6511d9fa29A0570Fd2f2C9D08cE3", // STRATEGIST ADDRESS
+  poolId: 1,
+  chef: sageChef,
+  unirouter: quickswap.router,
+  strategist: "0xBa4cB13Ed28C6511d9fa29A0570Fd2f2C9D08cE3", // some address
   keeper: beefyfinance.keeper,
   beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
-  outputToNativeRoute: [SPIRIT, WFTM],   //TODO 10
-  outputToLp0Route: [SPIRIT, WFTM, CRV], //TODO 11
-  outputToLp1Route: [SPIRIT, WFTM],      //TODO 12
-  pendingRewardsFunctionName: "pendingSpirit", // used for rewardsAvailable(), use correct function name from masterchef
+  outputToNativeRoute: [polySAGE, WMATIC],
+  outputToLp0Route: [polySAGE, USDC],
+  outputToLp1Route: [polySAGE],
+  pendingRewardsFunctionName: "pendingSage", // used for rewardsAvailable(), use correct function name from masterchef
 };
 
 const contractNames = {
   vault: "BeefyVaultV6",
-  strategy: "StrategySpiritChefLP",
+  strategy: "StrategyCommonChefLP",
 };
 
 async function main() {
@@ -103,6 +105,7 @@ async function main() {
     verifyContracts(vault, vaultConstructorArguments, strategy, strategyConstructorArguments);
   }
   await setCorrectCallFee(strategy, hardhat.network.name);
+  await setPendingRewardsFunctionName(strategy, strategyParams.pendingRewardsFunctionName);
   console.log();
 
   if (hardhat.network.name === "bsc") {
