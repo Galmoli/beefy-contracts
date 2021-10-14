@@ -71,7 +71,7 @@ async function main() {
     vaultParams.mooSymbol,
     vaultParams.delay,
   ];
-  const vault = await Vault.deploy(...vaultConstructorArguments);
+  const vault = await Vault.deploy(...vaultConstructorArguments, {gasLimit: 5000000});
   await vault.deployed();
 
   const strategyConstructorArguments = [
@@ -87,7 +87,7 @@ async function main() {
     strategyParams.outputToLp0Route,
     strategyParams.outputToLp1Route,
   ];
-  const strategy = await Strategy.deploy(...strategyConstructorArguments);
+  const strategy = await Strategy.deploy(...strategyConstructorArguments, {gasLimit: 5000000});
   await strategy.deployed();
 
   // add this info to PR
