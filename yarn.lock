@@ -2154,7 +2154,7 @@ blakejs@^1.1.0:
   resolved "https://registry.yarnpkg.com/blakejs/-/blakejs-1.1.1.tgz#bf313053978b2cd4c444a48795710be05c785702"
   integrity sha512-bLG6PHOCZJKNshTjGRBvET0vTciwQE6zFKOKKXPDJfwFBd4Ac0yBfPZqcGvGJap50l7ktvlpFqc2jGVaUgbJgg==
 
-blockchain-addressbook@0.3.46:
+blockchain-addressbook@^0.3.46:
   version "0.3.46"
   resolved "https://registry.yarnpkg.com/blockchain-addressbook/-/blockchain-addressbook-0.3.46.tgz#4194a63783f768bd56aefb8b3ff1d6c35e92362a"
   integrity sha512-gNgnu9MdrD8JzIO+UWXu2+wFyVM1Ym3jKb/iCyFk18iJePxDCE2QmijS8jb8luuKItbuWLBJ8YtAkv0Kv0qZjQ==
