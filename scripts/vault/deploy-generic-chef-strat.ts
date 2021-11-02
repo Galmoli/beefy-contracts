@@ -8,34 +8,36 @@ import { verifyContract } from "../../utils/verifyContract";
 const registerSubsidy = require("../../utils/registerSubsidy");
 
 const {
-  USDC: { address: USDC },
-  WMATIC: { address: WMATIC },
-  polyWISE: { address: polyWISE },
-} = addressBook.polygon.tokens;
-const { polywise, quickswap, beefyfinance } = addressBook.polygon.platforms;
+  WFTM: { address: WFTM },
+  BOO: {address: BOO}
+} = addressBook.fantom.tokens;
+const { spookyswap, beefyfinance } = addressBook.fantom.platforms;
+
+const DOLA = "0x3129662808bec728a27ab6a6b9afd3cbaca8a43c";
+const INV = "0xb84527d59b6ecb96f433029ecc890d4492c5dce1";
 
 const shouldVerifyOnEtherscan = false;
 
-const want = web3.utils.toChecksumAddress("0x2F9209Ef6fA6C002bf6fC99124336e24F88B62D0");
+const want = web3.utils.toChecksumAddress("0x26519b547416E4f53f3A4b05b95Ef859C3BD89Fe");
 
 const vaultParams = {
-  mooName: "Moo Polywise Quick USDC-WISE",
-  mooSymbol: "mooPolywiseQuickUSDC-WISE",
+  mooName: "Moo Boo DOLA-INV",
+  mooSymbol: "mooBooDOLA-INV",
   delay: 21600,
 };
 
 const strategyParams = {
   want,
-  poolId: 1,
-  chef: polywise.masterchef,
-  unirouter: quickswap.router,
-  strategist: "0x010dA5FF62B6e45f89FA7B2d8CEd5a8b5754eC1b", // some address
+  poolId: 40,
+  chef: spookyswap.masterchef,
+  unirouter: spookyswap.router,
+  strategist: "0xBa4cB13Ed28C6511d9fa29A0570Fd2f2C9D08cE3", // some address
   keeper: beefyfinance.keeper,
   beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
-  outputToNativeRoute: [polyWISE, WMATIC],
-  outputToLp0Route: [polyWISE, USDC],
-  outputToLp1Route: [polyWISE],
-  pendingRewardsFunctionName: "pendingWise", // used for rewardsAvailable(), use correct function name from masterchef
+  outputToNativeRoute: [BOO, WFTM],
+  outputToLp0Route: [BOO, WFTM, DOLA],
+  outputToLp1Route: [BOO, WFTM, DOLA, INV],
+  pendingRewardsFunctionName: "pendingBOO", // used for rewardsAvailable(), use correct function name from masterchef
 };
 
 const contractNames = {
@@ -70,7 +72,7 @@ async function main() {
     vaultParams.mooSymbol,
     vaultParams.delay,
   ];
-  const vault = await Vault.deploy(...vaultConstructorArguments);
+  const vault = await Vault.deploy(...vaultConstructorArguments, {gasLimit: 5000000, nonce: 199});
   await vault.deployed();
 
   const strategyConstructorArguments = [
@@ -86,7 +88,7 @@ async function main() {
     strategyParams.outputToLp0Route,
     strategyParams.outputToLp1Route,
   ];
-  const strategy = await Strategy.deploy(...strategyConstructorArguments);
+  const strategy = await Strategy.deploy(...strategyConstructorArguments, {gasLimit: 5000000, nonce: 200});
   await strategy.deployed();
 
   // add this info to PR
